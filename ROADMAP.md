@@ -4,12 +4,12 @@
 
 ## Setup (no tag)
 
-Project basics: configuration loading, dependencies, and a bot that listens for uploaded attachments but doesn't analyze them yet.
+Project basics: configuration loading, dependencies, and a bot that listens for uploaded attachments but doesn't analyze them yet. Also includes static bot-side features with no analysis dependency.
 
 - `requirements.txt`
 - `config.py`
 - `bot/main.py`
-- `bot/commands.py`
+- `bot/commands.py` — attachment listener, `/help`, `/status` (basic), welcome message on server join
 
 ## v0.1 — Dispatcher & fallback
 
@@ -51,12 +51,13 @@ Adds indicator extraction specific to PE binaries.
 
 ## v0.7 — Scoring & Report
 
-Analyzer results are aggregated, mapped to ATT&CK techniques, then turned into a risk score and a presentable report instead of a raw dump.
+Analyzer results are aggregated, mapped to ATT&CK techniques, then turned into a risk score and a presentable report instead of a raw dump. `/scan` becomes available, reusing the same pipeline as the passive listener. `/status` is enriched with scan counters.
 
 - `scoring/attck_mapper.py`
 - `scoring/engine.py`
 - `reporting/embed_builder.py`
 - `reporting/json_exporter.py`
+- `bot/commands.py` — `/scan` command
 
 ## v0.8 — Integration & Testing
 
@@ -64,3 +65,11 @@ A reputation lookup via VirusTotal runs in parallel with static analysis, and th
 
 - `integrations/virustotal.py`
 - `tests/test_pe.py`, `tests/test_pdf.py`, `tests/test_scoring.py`
+
+## v0.9 — Moderation & Override
+
+The bot acts on its own verdict: safe files are left untouched, uncertain files are flagged with a warning embed, and dangerous files are deleted and replaced with a warning message instead of the original upload. `/force` lets authorized roles whitelist a file by hash to bypass blocking/warnings.
+
+- `bot/commands.py` — `/force` command, moderation logic (delete + warn) on `on_message`
+- `config.py` — moderation thresholds, authorized roles for `/force`
+- `data/hash_allowlist.json` — whitelisted hashes added via `/force`

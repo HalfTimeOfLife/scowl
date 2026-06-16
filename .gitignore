@@ -31,9 +31,5 @@ Thumbs.db
 reports/*.json
 reports/*.html
 
-# Malware samples
-tests/samples/*
-!tests/samples/.gitkeep
-
 # VirusTotal cache
 vt_cache/
