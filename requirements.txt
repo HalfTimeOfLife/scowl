@@ -1,0 +1,11 @@
+# Discord bot framework
+discord.py>=2.3.0
+
+# Environment configuration
+python-dotenv>=1.0.0
+
+# File type detection (magic bytes)
+python-magic>=0.4.27
+
+# PE analysis (pe_analyzer.py)
+pefile>=2023.2.7

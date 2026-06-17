@@ -16,12 +16,12 @@ Discord bot that watches a server for uploaded files, automatically routes them 
 
 | Module | What it detects | Status |
 |---|---|---|
-| `generic_analyzer.py` | Plaintext fallback — printable strings, embedded URLs/IPs, suspicious keywords | WIP |
-| `script_analyzer.py` | PS1/BAT/VBS/JS — obfuscation patterns, encoded payloads, suspicious cmdlets, regex-based, no heavy dependency | WIP |
-| `pdf_analyzer.py` | Embedded JavaScript, auto-open actions, suspicious object streams, malformed structure | WIP |
-| `office_analyzer.py` | VBA macros, embedded OLE objects, external template injection, DDE fields | WIP |
-| `elf_analyzer.py` | Suspicious dynamic symbols, packed/stripped sections, anomalous segment layout | WIP |
-| `pe_analyzer.py` | Suspicious imports, section entropy, malformed headers, packing indicators | WIP |
+| `generic_analyzer.py` | Plaintext fallback — printable strings, embedded URLs/IPs, suspicious keywords | Planned |
+| `script_analyzer.py` | PS1/BAT/VBS/JS — obfuscation patterns, encoded payloads, suspicious cmdlets, regex-based, no heavy dependency | Planned |
+| `pdf_analyzer.py` | Embedded JavaScript, auto-open actions, suspicious object streams, malformed structure | Planned |
+| `office_analyzer.py` | VBA macros, embedded OLE objects, external template injection, DDE fields | Planned |
+| `elf_analyzer.py` | Suspicious dynamic symbols, packed/stripped sections, anomalous segment layout | Planned |
+| `pe_analyzer.py` | Suspicious imports, section entropy, malformed headers, packing indicators | Planned |
 
 ---
 
@@ -76,6 +76,20 @@ After analysis, scOWL replies in the Discord channel with an embed summarizing t
 - A Discord bot token — see [.env.example](.env.example)
 - A VirusTotal API key (optional, required for `integrations/virustotal.py`)
 - `pip install -r requirements.txt`
+
+---
+
+## Configuration
+
+Copy `.env.example` to `.env` and fill in the following variables:
+
+| Variable | Required | Description |
+|---|---|---|
+| `DISCORD_TOKEN` | Yes | Your bot token from the [Discord Developer Portal](https://discord.com/developers/applications) |
+| `VT_API_KEY` | No | Your VirusTotal API key — leave empty to disable VT lookups |
+| `WATCHED_CHANNEL_NAMES` | No | Comma-separated list of channel names to watch (e.g. `malware-analysis,samples`). Leave empty to watch all channels |
+| `WELCOME_CHANNEL_NAME` | No | Channel name where scOWL posts its welcome message on server join. Leave empty to use the server's system channel |
+| `TEMP_DOWNLOAD_DIR` | No | Absolute path to the temporary download directory. Defaults to `/tmp/scowl_uploads` |
 
 ---
 
