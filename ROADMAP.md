@@ -2,15 +2,6 @@
 
 ---
 
-## Setup (no tag)
-
-Project basics: configuration loading, dependencies, and a bot that listens for uploaded attachments but doesn't analyze them yet. Also includes static bot-side features with no analysis dependency.
-
-- `requirements.txt`
-- `config.py`
-- `bot/main.py`
-- `bot/commands.py` — attachment listener, `/help`, `/status` (basic), welcome message on server join
-
 ## v0.1 — Dispatcher & fallback
 
 The received file is identified via its magic bytes and routed to the matching analyzer, with a text fallback when no specific analyzer applies.

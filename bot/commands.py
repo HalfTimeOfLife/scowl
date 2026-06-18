@@ -9,11 +9,19 @@ Covers:
 """
 
 import discord
+import hashlib
+import logging
+import os
 
+
+from analysis.model import FileInfo
+from analysis.utils import compute_hashes, safe_filename, format_size
 from datetime import datetime, timezone
-from config import WELCOME_CHANNEL_NAME, WATCHED_CHANNEL_NAMES
+from config import WELCOME_CHANNEL_NAME, WATCHED_CHANNEL_NAMES, MAX_FILE_SIZE_BYTES, TEMP_DOWNLOAD_DIR
 from discord.ext import commands
 from discord import app_commands, Embed, Interaction
+
+logger = logging.getLogger(__name__)
 
 class ScowlEvents(commands.Cog):
     def __init__(self, bot):
@@ -24,6 +32,8 @@ class ScowlEvents(commands.Cog):
             if WATCHED_CHANNEL_NAMES
             else "All channels"
         )
+
+    # --- Cog listeners ----------------------------------------------------------------
 
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
@@ -53,6 +63,72 @@ class ScowlEvents(commands.Cog):
             embed.add_field(name="Commands", value="`/help` · `/status` · `/scan`", inline=True)
             embed.set_footer(text="scOWL · Use /help for the full command list")
             await target_channel.send(embed=embed)
+            
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author == self.bot.user:
+            return
+        if WATCHED_CHANNEL_NAMES and message.channel.name not in WATCHED_CHANNEL_NAMES:
+            return
+
+        for attachment in message.attachments:
+            if attachment.size > MAX_FILE_SIZE_BYTES:
+                logger.warning(f"file too large, skipped | id={attachment.id} filename={attachment.filename} size={attachment.size} limit={MAX_FILE_SIZE_BYTES}")
+                continue
+
+            file_info = FileInfo(
+                file_id=attachment.id,
+                filename=attachment.filename,
+                size=attachment.size,
+                channel=message.channel.name,
+                author=str(message.author),
+                content_type=attachment.content_type or "",
+            )
+
+            dest = os.path.join(
+                TEMP_DOWNLOAD_DIR,
+                safe_filename(attachment.id, attachment.filename)
+            )
+            os.makedirs(TEMP_DOWNLOAD_DIR, exist_ok=True)
+
+            try:
+                await attachment.save(dest)
+            except Exception:
+                logger.exception(f"download failed | id={attachment.id} filename={attachment.filename}")
+                continue
+
+            logger.info(f"file received | id={attachment.id} filename={attachment.filename} size={attachment.size} author={message.author} channel={message.channel.name}")
+            file_info.path = dest
+
+            try:
+                hashes = compute_hashes(dest)
+            except Exception:
+                logger.exception(f"hashing failed | id={attachment.id} filename={attachment.filename}")
+                continue
+
+            logger.debug(f"hashes computed | id={attachment.id} sha256={hashes['sha256']} sha1={hashes['sha1']} md5={hashes['md5']}")
+
+            file_info.sha256 = hashes["sha256"]
+            file_info.sha1 = hashes["sha1"]
+            file_info.md5 = hashes["md5"]
+            
+            embed = Embed(
+                title="📥 File received",
+                color=0x5865F2,
+            )
+            embed.set_author(name="scOWL — Static malware triage")
+            embed.add_field(name="Filename", value=file_info.filename, inline=False)
+            embed.add_field(name="Size", value=format_size(file_info.size), inline=False)
+            embed.add_field(name="Type", value=file_info.content_type, inline=False)
+            embed.add_field(name="Author", value=file_info.author, inline=False)
+            embed.add_field(name="SHA-256", value=file_info.sha256[:16] + "...", inline=False)
+            embed.set_footer(text="Analysis not yet implemented.")
+            
+            await message.reply(embed=embed)
+            
+        
+    
+    # --- SLASH COMMANDS ---------------------------------------------------------------
 
     @app_commands.command(name="help", description="Overview of scOWL and its analysis capabilities")
     async def help(self, interaction: Interaction):

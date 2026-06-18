@@ -6,6 +6,7 @@ across the bot, analyzers, scoring engine and integrations.
 """
 
 import os
+import tempfile
 
 from dotenv import load_dotenv
 
@@ -39,7 +40,9 @@ VT_API_KEY = os.getenv("VT_API_KEY", "")
 # 25 MB
 MAX_FILE_SIZE_BYTES = 25 * 1024 * 1024
 
-TEMP_DOWNLOAD_DIR = os.getenv("TEMP_DOWNLOAD_DIR", "/tmp/scowl_uploads")
+TEMP_DOWNLOAD_DIR = os.getenv("TEMP_DOWNLOAD_DIR", "").strip() or os.path.join(
+    tempfile.gettempdir(), "scowl_uploads"
+)
 
 
 # --- Risk scoring ------------------------------------------------------------

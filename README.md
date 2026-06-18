@@ -8,6 +8,12 @@ Discord bot that watches a server for uploaded files, automatically routes them 
 
 > **Status:** scOWL is under active development. See [ROADMAP.md](ROADMAP.md) for the current state of each analyzer.
 
+> ⚠️ **Security Warning**
+> - scOWL downloads and stores files uploaded to your Discord server, including potentially malicious ones.
+> - Always run scOWL in an isolated environment (VM, container, sandbox).
+> - Never run it on a host machine.
+> - Temporary files are stored in `TEMP_DOWNLOAD_DIR` and should be cleaned up regularly.
+
 ---
 
 ## Analysis Modules
@@ -37,6 +43,8 @@ scOWL/
 │   ├── main.py                    # Discord connection, event loop
 │   └── commands.py                # Attachment listener, temp file download
 ├── analysis/
+│   ├── model.py                   # FileInfo dataclass
+│   ├── utils.py                   # utility functions
 │   ├── dispatcher.py              # Magic bytes → analyzer routing
 │   ├── generic_analyzer.py
 │   ├── script_analyzer.py
@@ -89,7 +97,7 @@ Copy `.env.example` to `.env` and fill in the following variables:
 | `VT_API_KEY` | No | Your VirusTotal API key — leave empty to disable VT lookups |
 | `WATCHED_CHANNEL_NAMES` | No | Comma-separated list of channel names to watch (e.g. `malware-analysis,samples`). Leave empty to watch all channels |
 | `WELCOME_CHANNEL_NAME` | No | Channel name where scOWL posts its welcome message on server join. Leave empty to use the server's system channel |
-| `TEMP_DOWNLOAD_DIR` | No | Absolute path to the temporary download directory. Defaults to `/tmp/scowl_uploads` |
+| `TEMP_DOWNLOAD_DIR` | No | Absolute path to the temporary download directory. Defaults to `/tmp/scowl_uploads` or `C:\Users\<user>\AppData\Local\Temp\scowl_uploads` |
 
 ---
 
