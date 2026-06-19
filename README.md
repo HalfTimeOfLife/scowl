@@ -22,7 +22,7 @@ Discord bot that watches a server for uploaded files, automatically routes them 
 
 | Module | What it detects | Status |
 |---|---|---|
-| `generic_analyzer.py` | Plaintext fallback — printable strings, embedded URLs/IPs, suspicious keywords | Planned |
+| `generic_analyzer.py` | Plaintext fallback — printable strings, embedded URLs/IPs, suspicious keywords | WIP |
 | `script_analyzer.py` | PS1/BAT/VBS/JS — obfuscation patterns, encoded payloads, suspicious cmdlets, regex-based, no heavy dependency | Planned |
 | `pdf_analyzer.py` | Embedded JavaScript, auto-open actions, suspicious object streams, malformed structure | Planned |
 | `office_analyzer.py` | VBA macros, embedded OLE objects, external template injection, DDE fields | Planned |
@@ -84,6 +84,7 @@ After analysis, scOWL replies in the Discord channel with an embed summarizing t
 - A Discord bot token — see [.env.example](.env.example)
 - A VirusTotal API key (optional, required for `integrations/virustotal.py`)
 - `pip install -r requirements.txt`
+- **Windows only:** `pip install python-magic-bin` (replaces `python-magic`)
 
 ---
 
@@ -105,6 +106,7 @@ Copy `.env.example` to `.env` and fill in the following variables:
 
 1. Copy `.env.example` to `.env` and fill in `DISCORD_TOKEN` and `VT_API_KEY`
 2. Install dependencies: `pip install -r requirements.txt`
+   - **Windows only:** also run `pip install python-magic-bin`
 3. Run the bot: `python -m bot.main`
 4. Invite the bot to your server and upload a file in a watched channel — scOWL analyzes it automatically
 

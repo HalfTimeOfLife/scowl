@@ -77,3 +77,30 @@ def format_size(size):
     if size < 1024 * 1024:
         return f"{size / 1024:.1f} KB"
     return f"{size / (1024 * 1024):.1f} MB"
+
+def defang(text: str) -> str:
+    """
+    Defang a string for safe display.
+
+    - http:// -> hxxp://
+    - https:// -> hxxps://
+    - dots -> [.]
+    - @ -> [at]
+    
+    Args:
+        text (str): The string to defang.
+        
+    Returns:
+        str: The defanged string.
+    """
+
+    if not text:
+        return text
+
+    text = text.replace("http://", "hxxp://")
+    text = text.replace("https://", "hxxps://")
+
+    text = text.replace(".", "[.]")
+    text = text.replace("@", "[at]")
+
+    return text

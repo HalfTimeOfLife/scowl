@@ -6,6 +6,7 @@ python-dotenv>=1.0.0
 
 # File type detection (magic bytes)
 python-magic>=0.4.27
+# Windows only: pip install python-magic-bin
 
 # PE analysis (pe_analyzer.py)
 pefile>=2023.2.7

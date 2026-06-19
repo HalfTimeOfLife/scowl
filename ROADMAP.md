@@ -8,6 +8,7 @@ The received file is identified via its magic bytes and routed to the matching a
 
 - `analysis/dispatcher.py`
 - `analysis/generic_analyzer.py`
+- `reporting/embed_builder.py`
 
 ## v0.2 — Script analysis
 
@@ -46,7 +47,6 @@ Analyzer results are aggregated, mapped to ATT&CK techniques, then turned into a
 
 - `scoring/attck_mapper.py`
 - `scoring/engine.py`
-- `reporting/embed_builder.py`
 - `reporting/json_exporter.py`
 - `bot/commands.py` — `/scan` command
 

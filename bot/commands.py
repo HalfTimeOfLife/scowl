@@ -8,18 +8,19 @@ Covers:
 - /status — reports bot uptime and basic counters
 """
 
-import discord
-import hashlib
 import logging
 import os
 
 
 from analysis.model import FileInfo
 from analysis.utils import compute_hashes, safe_filename, format_size
+from analysis.dispatcher import dispatch
 from datetime import datetime, timezone
 from config import WELCOME_CHANNEL_NAME, WATCHED_CHANNEL_NAMES, MAX_FILE_SIZE_BYTES, TEMP_DOWNLOAD_DIR
 from discord.ext import commands
 from discord import app_commands, Embed, Interaction
+from reporting.embed_builder import build_result_embed
+
 
 logger = logging.getLogger(__name__)
 
@@ -112,19 +113,31 @@ class ScowlEvents(commands.Cog):
             file_info.sha1 = hashes["sha1"]
             file_info.md5 = hashes["md5"]
             
-            embed = Embed(
+            # ---- Analysis ----
+            result = dispatch(file_info)
+            if result.errors:
+                logger.warning(f"analysis errors | id={attachment.id} errors={result.errors}")
+            
+            # ---- Embed message to user ----
+            
+            # ---- Received embed ----
+            received_embed = Embed(
                 title="📥 File received",
                 color=0x5865F2,
             )
-            embed.set_author(name="scOWL — Static malware triage")
-            embed.add_field(name="Filename", value=file_info.filename, inline=False)
-            embed.add_field(name="Size", value=format_size(file_info.size), inline=False)
-            embed.add_field(name="Type", value=file_info.content_type, inline=False)
-            embed.add_field(name="Author", value=file_info.author, inline=False)
-            embed.add_field(name="SHA-256", value=file_info.sha256[:16] + "...", inline=False)
-            embed.set_footer(text="Analysis not yet implemented.")
+            received_embed.set_author(name="scOWL — Static malware triage")
+            received_embed.add_field(name="Filename", value=file_info.filename, inline=False)
+            received_embed.add_field(name="Size", value=format_size(file_info.size), inline=False)
+            received_embed.add_field(name="Type", value=file_info.content_type, inline=False)
+            received_embed.add_field(name="Author", value=file_info.author, inline=False)
+            received_embed.add_field(name="SHA-256", value=file_info.sha256[:16] + "...", inline=False)
+            received_embed.set_footer(text=f"scOWL · {len(result.indicators)} indicator(s) found")
             
-            await message.reply(embed=embed)
+            await message.reply(embed=received_embed)
+            
+            # --- Analysis result embed ----
+            await message.reply(embed=build_result_embed(result))
+            
             
         
     
