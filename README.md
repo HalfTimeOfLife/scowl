@@ -22,7 +22,7 @@ Discord bot that watches a server for uploaded files, automatically routes them 
 
 | Module | What it detects | Status |
 |---|---|---|
-| `generic_analyzer.py` | Plaintext fallback — printable strings, embedded URLs/IPs, suspicious keywords | WIP |
+| `generic_analyzer.py` | Plaintext fallback — printable strings, embedded URLs/IPs, suspicious keywords | UP |
 | `script_analyzer.py` | PS1/BAT/VBS/JS — obfuscation patterns, encoded payloads, suspicious cmdlets, regex-based, no heavy dependency | Planned |
 | `pdf_analyzer.py` | Embedded JavaScript, auto-open actions, suspicious object streams, malformed structure | Planned |
 | `office_analyzer.py` | VBA macros, embedded OLE objects, external template injection, DDE fields | Planned |
