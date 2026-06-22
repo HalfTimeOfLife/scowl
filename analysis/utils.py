@@ -1,7 +1,5 @@
 """
-analysis/utils.py
-
-Helpers used across the analysis.
+analysis/utils.py — Shared helpers used across the pipeline.
 """
 
 import hashlib
@@ -9,12 +7,15 @@ import re
 
 CHUNK_SIZE = 65536
 
+URL_RE = re.compile(r"https?://[^\s\"'<>]{4,}", re.IGNORECASE)
+IP_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
+
 
 def compute_hashes(path):
     """Compute SHA-256, SHA-1 and MD5 digests for a file.
 
-    Reads the file in fixed-size chunks rather than loading it
-    entirely into memory.
+    Reads the file in fixed-size chunks to avoid loading it entirely
+    into memory.
 
     Args:
         path: Path to the file on disk.
@@ -46,22 +47,21 @@ def compute_hashes(path):
 def safe_filename(attachment_id, filename):
     """Build a filesystem-safe name for a downloaded attachment.
 
-    Prefixes the attachment ID, then
-    sanitizes the original filename to remove characters that are
-    unsafe in file paths.
+    Prefixes the attachment ID and sanitizes the original filename
+    to remove characters that are unsafe in file paths.
 
     Args:
         attachment_id: Discord attachment ID (used as unique prefix).
         filename: Original filename from the Discord attachment.
 
     Returns:
-        A sanitized filename string of the form
-        "{attachment_id}_{stem}.{ext}".
+        A sanitized filename string of the form "{attachment_id}_{stem}.{ext}".
     """
     stem, _, ext = filename.rpartition(".")
     stem_clean = re.sub(r"[^\w\-]", "_", stem)
     ext_clean = re.sub(r"[^\w]", "_", ext)
     return f"{attachment_id}_{stem_clean}.{ext_clean}"
+
 
 def format_size(size):
     """Format a file size in bytes to a human-readable string.
@@ -78,29 +78,49 @@ def format_size(size):
         return f"{size / 1024:.1f} KB"
     return f"{size / (1024 * 1024):.1f} MB"
 
+
 def defang(text: str) -> str:
-    """
-    Defang a string for safe display.
+    """Defang a string for safe display.
 
-    - http:// -> hxxp://
-    - https:// -> hxxps://
-    - dots -> [.]
-    - @ -> [at]
-    
+    Replaces protocol prefixes and dots to prevent accidental
+    hyperlinking or execution of embedded URLs and IPs.
+
     Args:
-        text (str): The string to defang.
-        
-    Returns:
-        str: The defanged string.
-    """
+        text: The string to defang.
 
+    Returns:
+        The defanged string, or the original string if empty.
+    """
     if not text:
         return text
 
     text = text.replace("http://", "hxxp://")
     text = text.replace("https://", "hxxps://")
-
     text = text.replace(".", "[.]")
     text = text.replace("@", "[at]")
 
     return text
+
+
+def extract_urls(text):
+    """Extract URLs from a string.
+
+    Args:
+        text: The string to search.
+
+    Returns:
+        A list of extracted URL strings.
+    """
+    return URL_RE.findall(text)
+
+
+def extract_ips(text):
+    """Extract IP addresses from a string.
+
+    Args:
+        text: The string to search.
+
+    Returns:
+        A list of extracted IP address strings.
+    """
+    return IP_RE.findall(text)

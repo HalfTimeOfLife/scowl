@@ -10,3 +10,6 @@ python-magic>=0.4.27
 
 # PE analysis (pe_analyzer.py)
 pefile>=2023.2.7
+
+# Testing
+pytest>=8.0.0

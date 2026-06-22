@@ -1,0 +1,18 @@
+This is a test file for generic_analyzer.
+
+URLs:
+http://malicious.example.com/payload
+https://evil-domain.net/update/bin
+http://evil-domain.net/a.exe
+http://evil.com/file
+http://evil.com/payload.sh
+
+IP addresses:
+10.0.0.5
+8.8.8.8
+185.199.110.153
+203.0.113.42
+192.168.56.101
+
+Random noise:
+AAAAAAAAAAAAA some normal text BBBBBBBBBBBBBBB

@@ -1,27 +1,28 @@
-import re
+"""
+analysis/generic_analyzer.py — Plaintext analyzer.
+
+Extracts printable strings from raw bytes and scans them for
+embedded URLs and IP addresses. Used as a fallback for files
+that don't match any specific analyzer.
+
+Note: an IP embedded in a URL produces both an embedded_url
+and an embedded_ip indicator.
+"""
+
 from analysis.model import Indicator, AnalysisResult
-from analysis.utils import defang
+from analysis.utils import defang, extract_urls, extract_ips
 
-SUSPICIOUS_KEYWORDS = {
-    "cmd.exe",
-    "powershell",
-    "wget",
-    "curl",
-    "base64",
-    "eval",
-    "shellcode",
-    "net user",
-    "reg add",
-    "schtasks",
-    "certutil",
-    "wscript",
-    "cscript"
-}
-
-URL_RE = re.compile(r"https?://[^\s\"'<>]{8,}", re.IGNORECASE)
-IP_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
 
 def _extract_strings(data, min_length=4):
+    """Extract contiguous printable ASCII strings from raw bytes.
+
+    Args:
+        data: Raw bytes to scan.
+        min_length: Minimum string length to include (default: 4).
+
+    Returns:
+        List of extracted strings.
+    """
     current = []
     results = []
     for byte in data:
@@ -37,6 +38,15 @@ def _extract_strings(data, min_length=4):
 
 
 def analyze(file_info):
+    """Extract indicators from a file by scanning its printable strings.
+
+    Args:
+        file_info: FileInfo instance with path set.
+
+    Returns:
+        AnalysisResult with embedded_url and embedded_ip indicators,
+        or an error AnalysisResult if the file cannot be read.
+    """
     indicators_list = []
     try:
         with open(file_info.path, "rb") as f:
@@ -48,14 +58,11 @@ def analyze(file_info):
             metadata={},
             errors=[f"Failed to read file: {e}"],
         )
-        
-    # ---- String extraction ----
+
     extracted_strings = _extract_strings(data)
-    
+
     for extracted_string in extracted_strings:
-        
-        # ---- URLs search ----
-        urls = URL_RE.findall(extracted_string)
+        urls = extract_urls(extracted_string)
         for url in urls:
             indicators_list.append(
                 Indicator(
@@ -65,9 +72,8 @@ def analyze(file_info):
                     context={"url": defang(url)},
                 )
             )
-    
-        # ---- IPs search ----
-        ips = IP_RE.findall(extracted_string)
+
+        ips = extract_ips(extracted_string)
         for ip in ips:
             indicators_list.append(
                 Indicator(
@@ -77,21 +83,10 @@ def analyze(file_info):
                     context={"ip": defang(ip)},
                 )
             )
-            
-        # ---- Keyword search ----
-        for keyword in SUSPICIOUS_KEYWORDS:
-            if keyword in extracted_string.lower():
-                indicators_list.append(
-                    Indicator(
-                        name="suspicious_keyword",
-                        description=f"Suspicious keyword found: '{keyword}'",
-                        severity="medium",
-                        context={"keyword": keyword},
-                    )
-                )
+
     return AnalysisResult(
-                analyzer="generic",
-                indicators=indicators_list,
-                metadata={"string_count": len(extracted_strings)},
-                errors=[]
-            )
+        analyzer="generic",
+        indicators=indicators_list,
+        metadata={"string_count": len(extracted_strings)},
+        errors=[],
+    )
