@@ -1,0 +1,32 @@
+%PDF-1.7
+1 0 obj
+<< /Type /Catalog /OpenAction 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Action /S /Launch /F (calc.exe) >>
+endobj
+3 0 obj
+<< /Type /Action /S /JavaScript /JS (app.alert('pwned');) >>
+endobj
+4 0 obj
+<< /Type /Filespec /F (payload.exe) /EF << /F 5 0 R >> >>
+endobj
+5 0 obj
+<< /Type /EmbeddedFile /Length 20 >>
+stream
+FAKEBINARYDATAHERE01
+endstream
+endobj
+6 0 obj
+<< /Type /ObjStm /N 2 /First 12 /Length 40 >>
+stream
+fake compressed object stream data
+endstream
+endobj
+7 0 obj
+<< /Type /Annot /Subtype /Link /A << /S /URI /URI (http://evil-domain.example.com/stager) >> >>
+endobj
+% C2 relay at 185.199.110.153
+trailer
+<< /Root 1 0 R /Size 8 >>
+%%EOF
