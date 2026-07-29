@@ -6,6 +6,7 @@
 __pycache__/
 *.py[cod]
 *.so
+.pytest_cache/
 
 # Virtual envs
 .venv/
@@ -34,5 +35,5 @@ reports/*.html
 # VirusTotal cache
 vt_cache/
 
-#Discord config
+# Discord config
 scowl_config.PNG

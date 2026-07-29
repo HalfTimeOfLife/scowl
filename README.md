@@ -24,7 +24,7 @@ Discord bot that watches a server for uploaded files, automatically routes them 
 |---|---|---|
 | `generic_analyzer.py` | Plaintext fallback — printable strings, embedded URLs/IPs. **An IP embedded in a URL produces both an `embedded_url` and an `embedded_ip` indicator.** | UP |
 | `script_analyzer.py` | PS1/BAT/CMD/VBS/JS/SH — obfuscation patterns, encoded payloads, suspicious cmdlets, regex-based, no heavy dependency | UP |
-| `pdf_analyzer.py` | Embedded JavaScript, auto-open actions, suspicious object streams, malformed structure | Planned |
+| `pdf_analyzer.py` | Embedded JavaScript, auto-open actions, suspicious object streams, malformed structure | UP |
 | `office_analyzer.py` | VBA macros, embedded OLE objects, external template injection, DDE fields | Planned |
 | `elf_analyzer.py` | Suspicious dynamic symbols, packed/stripped sections, anomalous segment layout | Planned |
 | `pe_analyzer.py` | Suspicious imports, section entropy, malformed headers, packing indicators | Planned |

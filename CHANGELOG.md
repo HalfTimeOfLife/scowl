@@ -1,4 +1,22 @@
-# CHANGELOG
+# CHANGELOG - scOWL
+
+---
+
+## v0.3 — PDF analysis
+
+### Added
+- `analysis/pdf_analyzer.py` — PDF indicator extraction via raw byte/keyword scanning, no PDF-parsing dependency: `embedded_javascript` (`/JavaScript`, `/JS`), `autoopen_action` (`/OpenAction`, `/AA`, `/Launch`), `embedded_file` (`/EmbeddedFile`, `/Filespec`), `suspicious_object_stream` (`/ObjStm`, `/XRefStm`), `malformed_structure` (header/EOF/trailer/obj-endobj checks — `severity="low"`, since a genuinely corrupted file triggers the same signal as a deliberately evasive one); reuses `extract_urls`/`extract_ips` from `utils.py` for `embedded_url`/`embedded_ip`
+- `data/attck_patterns.json` — ATT&CK reference data (`default`/`patterns` schema: category-level default technique, with per-pattern overrides only where the default would be misleading) covering `embedded_url`, `embedded_ip`, `download_indicator`, `obfuscation_indicator`, `suspicious_cmdlet` (pre-v0.3 analyzers) plus the new PDF indicators. Not yet consumed by any mapper (planned for v0.7)
+- `tests/test_pdf.py` — unit tests for `analysis/pdf_analyzer.py`
+- `tests/samples/test_pdf_malicious.pdf`, `test_pdf_malformed.pdf`, `test_pdf_clean.pdf` — text-based PDF-syntax fixtures (not valid binary PDFs)
+
+### Changed
+- `analysis/dispatcher.py` — added `PDF_TYPES` (`application/pdf`) routing; added an extension-based fallback (`FALLBACK_EXTENSIONS`) so a `.pdf` file whose magic bytes go unrecognized (e.g. a deliberately stripped `%PDF-` header) still routes to `pdf_analyzer` instead of `generic_analyzer`; this fallback appends an `extension_mimetype_mismatch` indicator (mapped to ATT&CK T1036.008 — Masquerading) so the mismatch itself is visible in the report
+- `reporting/embed_builder.py` — added `embedded_javascript`, `autoopen_action`, `embedded_file`, `suspicious_object_stream`, `malformed_structure` and `extension_mimetype_mismatch` fields; fields remain hidden when empty
+- `README.md` — `pdf_analyzer.py` status updated to `UP`
+- `.gitignore` — added `.pytest_cache/`
+
+---
 
 ## v0.2 — Script analysis
 
