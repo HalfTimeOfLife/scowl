@@ -10,8 +10,9 @@ from pathlib import Path
 import magic
 
 from analysis import generic_analyzer
+from analysis import pdf_analyzer
 from analysis import script_analyzer
-from analysis.model import AnalysisResult
+from analysis.model import AnalysisResult, Indicator
 
 
 PE_TYPES = {
@@ -31,6 +32,10 @@ OFFICE_TYPES = {
     "application/msword",
     "application/vnd.ms-excel",
     "application/vnd.ms-powerpoint",
+}
+
+PDF_TYPES = {
+    "application/pdf",
 }
 
 SCRIPT_MIME_TYPES = {
@@ -70,10 +75,14 @@ def _get_analyzer(mime_type, filename):
     #     return elf_analyzer.analyze
     # if mime_type in OFFICE_TYPES:
     #     return office_analyzer.analyze
+    if mime_type in PDF_TYPES:
+        return pdf_analyzer.analyze
     if mime_type in SCRIPT_MIME_TYPES:
         ext = Path(filename).suffix.lower()
         if ext in SCRIPT_EXTENSIONS:
             return script_analyzer.analyze
+    if Path(filename).suffix.lower() == ".pdf":
+        return pdf_analyzer.analyze
     return generic_analyzer.analyze
 
 
@@ -102,5 +111,24 @@ def dispatch(file_info):
 
     file_info.content_type = mime_type
 
+    ext = Path(file_info.filename).suffix.lower()
+    used_extension_fallback = ext == ".pdf" and mime_type not in PDF_TYPES
+
     analyzer = _get_analyzer(mime_type, file_info.filename)
-    return analyzer(file_info)
+    result = analyzer(file_info)
+
+    if used_extension_fallback:
+        print("detourned1")
+        result.indicators.append(
+            Indicator(
+                name="extension_mimetype_mismatch",
+                description=(
+                    f"File extension '.pdf' does not match the detected "
+                    f"content type ('{mime_type}'), routed via extension fallback"
+                ),
+                severity="medium",
+                context={"detected_mime_type": mime_type, "extension": ext},
+            )
+        )
+
+    return result
