@@ -1,0 +1,415 @@
+{
+    "embedded_url": {
+        "default": [
+            {
+                "technique_id": "T1071.001",
+                "technique": "Application Layer Protocol: Web Protocols",
+                "tactic": "Command and Control"
+            }
+        ]
+    },
+    "embedded_ip": {
+        "default": [
+            {
+                "technique_id": "T1071",
+                "technique": "Application Layer Protocol",
+                "tactic": "Command and Control"
+            }
+        ]
+    },
+    "download_indicator": {
+        "default": [
+            {
+                "technique_id": "T1105",
+                "technique": "Ingress Tool Transfer",
+                "tactic": "Command and Control"
+            }
+        ],
+        "patterns": {
+            "iex": [
+                {
+                    "technique_id": "T1059.001",
+                    "technique": "Command and Scripting Interpreter: PowerShell",
+                    "tactic": "Execution"
+                }
+            ],
+            "invoke-expression": [
+                {
+                    "technique_id": "T1059.001",
+                    "technique": "Command and Scripting Interpreter: PowerShell",
+                    "tactic": "Execution"
+                }
+            ],
+            "start-bitstransfer": [
+                {
+                    "technique_id": "T1197",
+                    "technique": "BITS Jobs",
+                    "tactic": "Command and Control"
+                }
+            ],
+            "bitsadmin": [
+                {
+                    "technique_id": "T1197",
+                    "technique": "BITS Jobs",
+                    "tactic": "Command and Control"
+                }
+            ],
+            "activexobject": [
+                {
+                    "technique_id": "T1059.007",
+                    "technique": "Command and Scripting Interpreter: JavaScript",
+                    "tactic": "Execution"
+                }
+            ]
+        }
+    },
+    "obfuscation_indicator": {
+        "default": [
+            {
+                "technique_id": "T1027",
+                "technique": "Obfuscated Files or Information",
+                "tactic": "Defense Evasion"
+            }
+        ],
+        "patterns": {
+            "frombase64string": [
+                {
+                    "technique_id": "T1140",
+                    "technique": "Deobfuscate/Decode Files or Information",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "unescape(": [
+                {
+                    "technique_id": "T1140",
+                    "technique": "Deobfuscate/Decode Files or Information",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "base64 -d": [
+                {
+                    "technique_id": "T1140",
+                    "technique": "Deobfuscate/Decode Files or Information",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "base64 --decode": [
+                {
+                    "technique_id": "T1140",
+                    "technique": "Deobfuscate/Decode Files or Information",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "xxd": [
+                {
+                    "technique_id": "T1140",
+                    "technique": "Deobfuscate/Decode Files or Information",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "od ": [
+                {
+                    "technique_id": "T1140",
+                    "technique": "Deobfuscate/Decode Files or Information",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "reflection.assembly": [
+                {
+                    "technique_id": "T1620",
+                    "technique": "Reflective Code Loading",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "::load(": [
+                {
+                    "technique_id": "T1620",
+                    "technique": "Reflective Code Loading",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "compress-archive": [
+                {
+                    "technique_id": "T1560.001",
+                    "technique": "Archive Collected Data: Archive via Utility",
+                    "tactic": "Collection"
+                }
+            ],
+            "expand-archive": [
+                {
+                    "technique_id": "T1140",
+                    "technique": "Deobfuscate/Decode Files or Information",
+                    "tactic": "Defense Evasion"
+                }
+            ]
+        }
+    },
+    "suspicious_cmdlet": {
+        "default": [
+            {
+                "technique_id": "T1059",
+                "technique": "Command and Scripting Interpreter",
+                "tactic": "Execution"
+            }
+        ],
+        "patterns": {
+            "invoke-mimikatz": [
+                {
+                    "technique_id": "T1003",
+                    "technique": "OS Credential Dumping",
+                    "tactic": "Credential Access"
+                }
+            ],
+            "sekurlsa": [
+                {
+                    "technique_id": "T1003.001",
+                    "technique": "OS Credential Dumping: LSASS Memory",
+                    "tactic": "Credential Access"
+                }
+            ],
+            "lsadump": [
+                {
+                    "technique_id": "T1003",
+                    "technique": "OS Credential Dumping",
+                    "tactic": "Credential Access"
+                }
+            ],
+            "add-mppreference": [
+                {
+                    "technique_id": "T1562.001",
+                    "technique": "Impair Defenses: Disable or Modify Tools",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "set-mppreference": [
+                {
+                    "technique_id": "T1562.001",
+                    "technique": "Impair Defenses: Disable or Modify Tools",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "set-executionpolicy": [
+                {
+                    "technique_id": "T1562.001",
+                    "technique": "Impair Defenses: Disable or Modify Tools",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "bypass": [
+                {
+                    "technique_id": "T1562.001",
+                    "technique": "Impair Defenses: Disable or Modify Tools",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "sc config": [
+                {
+                    "technique_id": "T1562.001",
+                    "technique": "Impair Defenses: Disable or Modify Tools",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "hidden": [
+                {
+                    "technique_id": "T1564.003",
+                    "technique": "Hide Artifacts: Hidden Window",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "net user": [
+                {
+                    "technique_id": "T1136.001",
+                    "technique": "Create Account: Local Account",
+                    "tactic": "Persistence"
+                }
+            ],
+            "useradd": [
+                {
+                    "technique_id": "T1136.001",
+                    "technique": "Create Account: Local Account",
+                    "tactic": "Persistence"
+                }
+            ],
+            "adduser": [
+                {
+                    "technique_id": "T1136.001",
+                    "technique": "Create Account: Local Account",
+                    "tactic": "Persistence"
+                }
+            ],
+            "reg add": [
+                {
+                    "technique_id": "T1112",
+                    "technique": "Modify Registry",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "schtasks": [
+                {
+                    "technique_id": "T1053.005",
+                    "technique": "Scheduled Task/Job: Scheduled Task",
+                    "tactic": "Execution"
+                }
+            ],
+            "crontab": [
+                {
+                    "technique_id": "T1053.003",
+                    "technique": "Scheduled Task/Job: Cron",
+                    "tactic": "Execution"
+                }
+            ],
+            "at ": [
+                {
+                    "technique_id": "T1053",
+                    "technique": "Scheduled Task/Job",
+                    "tactic": "Execution"
+                }
+            ],
+            "sc stop": [
+                {
+                    "technique_id": "T1489",
+                    "technique": "Service Stop",
+                    "tactic": "Impact"
+                }
+            ],
+            "vssadmin delete": [
+                {
+                    "technique_id": "T1490",
+                    "technique": "Inhibit System Recovery",
+                    "tactic": "Impact"
+                }
+            ],
+            "bcdedit": [
+                {
+                    "technique_id": "T1490",
+                    "technique": "Inhibit System Recovery",
+                    "tactic": "Impact"
+                }
+            ],
+            "wscript": [
+                {
+                    "technique_id": "T1059.005",
+                    "technique": "Command and Scripting Interpreter: Visual Basic",
+                    "tactic": "Execution"
+                }
+            ],
+            "cscript": [
+                {
+                    "technique_id": "T1059.005",
+                    "technique": "Command and Scripting Interpreter: Visual Basic",
+                    "tactic": "Execution"
+                }
+            ],
+            "createobject": [
+                {
+                    "technique_id": "T1059.005",
+                    "technique": "Command and Scripting Interpreter: Visual Basic",
+                    "tactic": "Execution"
+                }
+            ],
+            "chmod +x": [
+                {
+                    "technique_id": "T1222.002",
+                    "technique": "File and Directory Permissions Modification: Linux and Mac File and Directory Permissions Modification",
+                    "tactic": "Defense Evasion"
+                }
+            ],
+            "/dev/tcp": [
+                {
+                    "technique_id": "T1095",
+                    "technique": "Non-Application Layer Protocol",
+                    "tactic": "Command and Control"
+                }
+            ],
+            "nc ": [
+                {
+                    "technique_id": "T1059.004",
+                    "technique": "Command and Scripting Interpreter: Unix Shell",
+                    "tactic": "Execution"
+                }
+            ],
+            "ncat": [
+                {
+                    "technique_id": "T1059.004",
+                    "technique": "Command and Scripting Interpreter: Unix Shell",
+                    "tactic": "Execution"
+                }
+            ],
+            "netcat": [
+                {
+                    "technique_id": "T1059.004",
+                    "technique": "Command and Scripting Interpreter: Unix Shell",
+                    "tactic": "Execution"
+                }
+            ],
+            "sudo ": [
+                {
+                    "technique_id": "T1548.003",
+                    "technique": "Abuse Elevation Control Mechanism: Sudo and Sudo Caching",
+                    "tactic": "Privilege Escalation"
+                }
+            ],
+            "pkexec": [
+                {
+                    "technique_id": "T1548",
+                    "technique": "Abuse Elevation Control Mechanism",
+                    "tactic": "Privilege Escalation"
+                }
+            ]
+        }
+    },
+    "embedded_javascript": {
+        "default": [
+            {
+                "technique_id": "T1059.007",
+                "technique": "Command and Scripting Interpreter: JavaScript",
+                "tactic": "Execution"
+            }
+        ]
+    },
+    "autoopen_action": {
+        "default": [
+            {
+                "technique_id": "T1204.002",
+                "technique": "User Execution: Malicious File",
+                "tactic": "Execution"
+            }
+        ]
+    },
+    "embedded_file": {
+        "default": [
+            {
+                "technique_id": "T1027",
+                "technique": "Obfuscated Files or Information",
+                "tactic": "Defense Evasion"
+            }
+        ]
+    },
+    "suspicious_object_stream": {
+        "default": [
+            {
+                "technique_id": "T1027",
+                "technique": "Obfuscated Files or Information",
+                "tactic": "Defense Evasion"
+            }
+        ]
+    },
+    "malformed_structure": {
+        "default": [
+            {
+                "technique_id": "T1027",
+                "technique": "Obfuscated Files or Information",
+                "tactic": "Defense Evasion"
+            }
+        ]
+    },
+    "extension_mimetype_mismatch": {
+        "default": [
+            {
+                "technique_id": "T1036.008",
+                "technique": " Masquerading: Masquerade File Type",
+                "tactic": "Defense Evasion"
+            }
+        ]
+    }
+}
