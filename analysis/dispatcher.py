@@ -112,13 +112,16 @@ def dispatch(file_info):
     file_info.content_type = mime_type
 
     ext = Path(file_info.filename).suffix.lower()
-    used_extension_fallback = ext == ".pdf" and mime_type not in PDF_TYPES
-
     analyzer = _get_analyzer(mime_type, file_info.filename)
+    used_extension_fallback = (
+        ext == ".pdf"
+        and mime_type not in PDF_TYPES
+        and analyzer is pdf_analyzer.analyze
+    )
+
     result = analyzer(file_info)
 
     if used_extension_fallback:
-        print("detourned1")
         result.indicators.append(
             Indicator(
                 name="extension_mimetype_mismatch",
